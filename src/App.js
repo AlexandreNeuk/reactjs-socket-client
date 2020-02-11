@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import socketIOClient from "socket.io-client";
 
-let IdDevice = 1
+let IdDevice = 2345
+let IdSoha = 1
 let OrdemVenda = 'OV1234'
 
 class App extends Component {
@@ -12,20 +13,21 @@ class App extends Component {
       endpoint: "http://localhost:3001/"
     }
     //
-    //this.socket = socketIOClient('http://localhost:3001/', {query: 'IdDevice=' + IdDevice +'&partner=soha&topic=seats'})
+    this.socket = socketIOClient('http://localhost:3001/', {query: 'IdDevice=' + IdSoha +'&partner=soha&topic=seats'})
     //
-    this.socket = socketIOClient('http://localhost:3001/', {query: 'salesOrder=' + OrdemVenda +'&partner=parceiro&topic=tire'})
+    //this.socket = socketIOClient('http://localhost:3001/', {query: 'IdDevice=' + IdDevice +'&partner=Plenatech&topic=wifistatus'})
     //
     //this.socket = socketIOClient('http://localhost:3001/', {query: 'IdDevice=' + id +'&partner=soha&topic=seats'})
     //
     setInterval(() => this.checkSocket(), 5000)
   }
+
   componentDidMount() {
     //const { endpoint } = this.state;
     try {
-      //this.socket.on("Soha", data => this.setState({response_teste: data}))
+      this.socket.on("Soha", data => this.setState({response_soha: data}))
       //
-      this.socket.on("parceiro", data => this.setState({response_parceiro: data}))
+      //this.socket.on("Plenatech", data => this.setState({response_parceiro: data}))
 
     } catch (error) {
       console.log('ERROR: ', error)
@@ -45,9 +47,9 @@ class App extends Component {
 
   checkSocket = async => {
     try {
-      console.log('checkSocket id = ', IdDevice)
-        this.socket = socketIOClient('http://localhost:3001/', {query: 'IdDevice=' + IdDevice + '&partner=soha&topic=seats'})
-        IdDevice++
+        console.log('checkSocket id = ', IdDevice)
+        //this.socket = socketIOClient('http://localhost:3001/', {query: 'IdDevice=' + IdDevice + '&partner=Plenatech&topic=wifistatus'})
+        //IdDevice++
         //console.log('LOG -> : ', socket.handshake)
     } catch (error) {
         
@@ -55,14 +57,14 @@ class App extends Component {
   }
 
   render() {
-    const { response_teste, response_parceiro } = this.state;
+    const { response_soha, response_parceiro } = this.state;
 
     return (
         <div>
               <div style={{ textAlign: "center" }}>
-                  {response_teste
+                  {response_soha
                       ? <p>
-                        teste dados: {response_teste[0]._id}
+                        Soha dados: {response_soha._id}
                       </p>
                       : <p>Loading...</p>}
                 </div>
@@ -78,32 +80,3 @@ class App extends Component {
   }
 }
 export default App;
-
-/*
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
-
-export default App;
-*/
